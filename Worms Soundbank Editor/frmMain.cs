@@ -197,6 +197,7 @@ namespace Worms_Soundbank_Editor
             ResetEverything();
             CurrentSoundbank = bank;
             SoundbankPath = string.Concat(SpeechPath, "/", bank);
+            cmbSoundbankList.Text = bank;
             sounds.ForEach(sound =>
             {
                 if (!sound.Used) return;
@@ -276,6 +277,7 @@ namespace Worms_Soundbank_Editor
             LoadSoundbankList(ref cmbSoundbankList);
             foreach (ListViewItem item in lvSoundbankSounds.Items)
             {
+                item.Selected = false;
                 item.ImageKey = "NO_IMAGE";
                 var selectedSound = FindSound(item.SubItems[1].Text);
                 if (selectedSound != null)
