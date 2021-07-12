@@ -399,6 +399,7 @@ namespace Worms_Soundbank_Editor
                             selectedSound.SoundDuration = WavFileUtils.GetWavFileDuration(selectedSound.SoundPath).TotalSeconds;
                             selectedItem.ToolTipText = ofdFile.FileName;
                             selectedItem.SubItems[2].Text = $"{selectedSound.SoundDuration:0.##} sec.";
+                            btnDeleteSound.Enabled = true;
                             WavFileUtils.PlaySound(selectedSound.SoundPath);
                             if (selectedSound.SoundDuration > 4)
                                 MessageBox.Show(SOUND_SAMPLE_TOO_LONG, APPLICATION_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -434,6 +435,7 @@ namespace Worms_Soundbank_Editor
                         selectedSound.SoundPath = "";
                         selectedSound.SoundDuration = 0;
                         btnDeleteSound.Enabled = false;
+                        Changed = true;
                     }
                     catch (Exception exception)
                     {
