@@ -27,7 +27,7 @@ namespace Worms_Soundbank_Editor
         private string TempDirectory;
         private const string SOUND_SAMPLE_TOO_LONG = "The sound sample is very long. It might interfere with other sounds during gameplay.\n\nConsider trimming the sound with a sound editor.";
         private const string DEFAULT_SOUNDBANK = @"./DATA/User/Speech/English";
-        private const string NEW_SOUNDBANK = "<New Character>";
+        private const string NEW_SOUNDBANK = "<New Soundbank>";
         private const string EXTENSION_FILTER = "Sounds (*.wav, *.mp3, *.aiff, *.ogg)|*.wav; *.mp3; *.aiff; *.ogg";
         private const string UNSAVED_CHANGES_PROMPT = "You have some unsaved changes on your current soundbank.\nDo you want to save them?";
         private const string EXISTING_SOUNDBANK_PROMPT = "This action will overwrite the entire soundbank, including deleting sound files that are not part of the new list. This operation CANNOT be undone.\nDo you want to save them?";
@@ -62,10 +62,11 @@ namespace Worms_Soundbank_Editor
                 WAPath = "../";
                 SpeechPath = "./Speech";
             }
-            LoadSoundbankList(ref cmbSoundbankList);
             InitializeSoundList();
             ofdFile.Filter = EXTENSION_FILTER;
             ResetEverything();
+            LoadSoundbankList(ref cmbSoundbankList);
+            cmbSoundbankList.SelectedIndex = 0;
         }
         public static void BringProcessToFront(Process process)
         {
@@ -128,7 +129,6 @@ namespace Worms_Soundbank_Editor
                 string soundBank = soundBankFolderPath[soundBankFolderPath.Length - 1];
                 list.Items.Add(soundBank);
             }
-            list.SelectedIndex = 0;
         }
 
         private void InitializeSoundList()
@@ -274,7 +274,6 @@ namespace Worms_Soundbank_Editor
         private void ResetEverything()
         {
             Changed = false;
-            LoadSoundbankList(ref cmbSoundbankList);
             foreach (ListViewItem item in lvSoundbankSounds.Items)
             {
                 item.Selected = false;
@@ -352,6 +351,7 @@ namespace Worms_Soundbank_Editor
                 }
                 else
                 {
+                    ResetEverything();
                     CurrentSoundbank = "";
                     btnSave.Enabled = false;
                     btnDeleteBank.Enabled = false;
