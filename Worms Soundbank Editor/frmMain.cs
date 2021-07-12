@@ -114,6 +114,7 @@ namespace Worms_Soundbank_Editor
 
         public void LoadSoundbankList(ref ComboBox list)
         {
+            list.Items.Clear();
             list.Items.Add(NEW_SOUNDBANK);
             string[] directories = Directory.GetDirectories(SpeechPath);
             for (int i = 0; i < directories.Length; i++)
@@ -272,6 +273,7 @@ namespace Worms_Soundbank_Editor
         private void ResetEverything()
         {
             Changed = false;
+            LoadSoundbankList(ref cmbSoundbankList);
             foreach (ListViewItem item in lvSoundbankSounds.Items)
             {
                 item.ImageKey = "NO_IMAGE";
