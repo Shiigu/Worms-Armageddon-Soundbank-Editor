@@ -38,6 +38,7 @@ namespace Worms_Soundbank_Editor
         private const string RECTANGLE_IMAGE = "rect";
         private const string NO_IMAGE = "";
         private bool Changed = false;
+        private bool ShowUnusedSounds = false;
 
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -62,8 +63,10 @@ namespace Worms_Soundbank_Editor
                 WAPath = "../";
                 SpeechPath = "./Speech";
             }
-            InitializeSoundList();
+            tpCheckbox.SetToolTip(chkShowUnusedSounds, "When checked, sounds considered unused will show up on the list.\n\nSuch sounds will be able to be modified as a result.");
+            CurrentSoundbank = NEW_SOUNDBANK;
             ofdFile.Filter = EXTENSION_FILTER;
+            InitializeSoundList();
             ResetEverything();
             LoadSoundbankList(ref cmbSoundbankList);
             cmbSoundbankList.SelectedIndex = 0;
@@ -158,25 +161,47 @@ namespace Worms_Soundbank_Editor
                 imageList.Images.Add(key: RECTANGLE_IMAGE, image: image);
                 lvSoundbankSounds.SmallImageList = imageList;
             }
+            FillSoundList();
+        }
+
+        private void FillSoundList()
+        {
+            lvSoundbankSounds.Items.Clear();
             sounds.ForEach(sound =>
             {
-                if (sound.Used)
+                if (ShowUnusedSounds || sound.Used)
                 {
-                    var listViewItem = new ListViewItem();
-                    listViewItem.ImageKey = "NO_IMAGE";
-                    listViewItem.SubItems.Add(sound.DisplayName);
+                    var listViewItem = new ListViewItem
+                    {
+                        ImageKey = null
+                    };
+                    listViewItem.SubItems.Add(sound.Used ? sound.DisplayName : $"{sound.DisplayName} (UNUSED)");
                     listViewItem.SubItems.Add(string.Empty);
                     listViewItem.ToolTipText = sound.Description;
+                    if (!CurrentSoundbank.Equals(NEW_SOUNDBANK))
+                    {
+                        var soundPath = $"{SoundbankPath}/{sound.FileName}";
+                        if (File.Exists(soundPath))
+                        {
+                            listViewItem.ImageKey = RECTANGLE_IMAGE;
+                            sound.SoundPath = soundPath;
+                            sound.SoundDuration = WavFileUtils.GetWavFileDuration(sound.SoundPath).TotalSeconds;
+                            listViewItem.SubItems[2].Text = $"{sound.SoundDuration.ToString("0.##")} sec.";
+                            listViewItem.ToolTipText = soundPath;
+                        }
+                    }
                     lvSoundbankSounds.Items.Add(listViewItem);
                 }
             });
+
         }
 
         private Sound FindSound(string displayName)
         {
+            var displayNameRegardlessOfUsed = displayName.Replace(" (UNUSED)", "");
             foreach(Sound sound in sounds)
             {
-                if (sound.DisplayName.Equals(displayName))
+                if (sound.DisplayName.Equals(displayNameRegardlessOfUsed))
                     return sound;
             }
             return null;
@@ -198,26 +223,7 @@ namespace Worms_Soundbank_Editor
             CurrentSoundbank = bank;
             SoundbankPath = string.Concat(SpeechPath, "/", bank);
             cmbSoundbankList.Text = bank;
-            sounds.ForEach(sound =>
-            {
-                if (!sound.Used) return;
-                var soundItem = lvSoundbankSounds.FindItemWithText(sound.DisplayName, true, 0);
-                if (!CurrentSoundbank.Equals(NEW_SOUNDBANK))
-                {
-                    var soundPath = $"{SoundbankPath}/{sound.FileName}";
-                    if (File.Exists(soundPath))
-                    {
-                        if (soundItem != null)
-                        {
-                            soundItem.ImageKey = RECTANGLE_IMAGE;
-                            sound.SoundPath = soundPath;
-                            sound.SoundDuration = WavFileUtils.GetWavFileDuration(sound.SoundPath).TotalSeconds;
-                            soundItem.SubItems[2].Text = $"{sound.SoundDuration.ToString("0.##")} sec.";
-                            soundItem.ToolTipText = soundPath;
-                        }
-                    }
-                }
-            });
+            FillSoundList();
         }
 
         private void SaveSoundbank()
@@ -496,6 +502,12 @@ namespace Worms_Soundbank_Editor
                        Color.Black, 1, ButtonBorderStyle.Dotted, // top
                        Color.Black, 1, ButtonBorderStyle.Dotted, // right
                        Color.Black, 1, ButtonBorderStyle.Dotted);// bottom
+        }
+
+        private void chkShowUnusedSounds_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowUnusedSounds = chkShowUnusedSounds.Checked;
+            FillSoundList();
         }
     }
 }

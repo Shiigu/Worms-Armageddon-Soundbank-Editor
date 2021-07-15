@@ -29,6 +29,7 @@ namespace Worms_Soundbank_Editor
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.fbdFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.ofdFile = new System.Windows.Forms.OpenFileDialog();
@@ -49,6 +50,8 @@ namespace Worms_Soundbank_Editor
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.txtSoundDescription = new System.Windows.Forms.TextBox();
+            this.chkShowUnusedSounds = new System.Windows.Forms.CheckBox();
+            this.tpCheckbox = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -221,11 +224,22 @@ namespace Worms_Soundbank_Editor
             this.txtSoundDescription.Size = new System.Drawing.Size(601, 47);
             this.txtSoundDescription.TabIndex = 7;
             // 
+            // chkShowUnusedSounds
+            // 
+            this.chkShowUnusedSounds.Location = new System.Drawing.Point(484, 139);
+            this.chkShowUnusedSounds.Name = "chkShowUnusedSounds";
+            this.chkShowUnusedSounds.Size = new System.Drawing.Size(151, 46);
+            this.chkShowUnusedSounds.TabIndex = 14;
+            this.chkShowUnusedSounds.Text = "Show unused\r\nsounds";
+            this.chkShowUnusedSounds.UseVisualStyleBackColor = true;
+            this.chkShowUnusedSounds.CheckedChanged += new System.EventHandler(this.chkShowUnusedSounds_CheckedChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(647, 544);
+            this.Controls.Add(this.chkShowUnusedSounds);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnExit);
@@ -270,6 +284,8 @@ namespace Worms_Soundbank_Editor
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox txtSoundDescription;
+        private System.Windows.Forms.CheckBox chkShowUnusedSounds;
+        private System.Windows.Forms.ToolTip tpCheckbox;
     }
 }
 
