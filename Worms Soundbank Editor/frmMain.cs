@@ -336,6 +336,8 @@ namespace Worms_Soundbank_Editor
                         btnSaveAs_Click(null, null);
                 }
             }
+            if (Directory.Exists(TempDirectory))
+                Directory.Delete(TempDirectory, true);
             Application.Exit();
         }
 
