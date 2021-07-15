@@ -248,14 +248,17 @@ namespace Worms_Soundbank_Editor
                Directory.CreateDirectory(newDirectory);
             sounds.ForEach(sound =>
             {
-                if(!sound.SoundPath.Equals($"{newDirectory}/{sound.FileName}"))
-                    File.Delete($"{newDirectory}/{sound.FileName}");
-                if(!string.IsNullOrEmpty(sound.SoundPath))
+                if (ShowUnusedSounds || sound.Used)
                 {
-                    File.Move(sound.SoundPath, $"{newDirectory}/{sound.FileName}");
-                    sound.SoundPath = $"{newDirectory}/{sound.FileName}";
-                    var soundItem = lvSoundbankSounds.FindItemWithText(sound.DisplayName, true, 0);
-                    soundItem.ToolTipText = sound.SoundPath;
+                    if (!sound.SoundPath.Equals($"{newDirectory}/{sound.FileName}"))
+                        File.Delete($"{newDirectory}/{sound.FileName}");
+                    if (!string.IsNullOrEmpty(sound.SoundPath))
+                    {
+                        File.Move(sound.SoundPath, $"{newDirectory}/{sound.FileName}");
+                        sound.SoundPath = $"{newDirectory}/{sound.FileName}";
+                        var soundItem = lvSoundbankSounds.FindItemWithText(sound.DisplayName, true, 0);
+                        soundItem.ToolTipText = sound.SoundPath;
+                    }
                 }
             });
             if (Directory.Exists(TempDirectory))
