@@ -52,7 +52,7 @@ namespace Worms_Soundbank_Editor.Utils
 
         public static void ConvertToWav(string inPath, string outPath)
         {
-            switch (Path.GetExtension(inPath))
+            switch (Path.GetExtension(inPath).ToLowerInvariant())
             {
                 case ".wav":
                     File.Copy(inPath, outPath, true);
@@ -74,7 +74,7 @@ namespace Worms_Soundbank_Editor.Utils
             using (var waveFileReader = new WaveFileReader(path))
             {
                 var convertedSound = string.Concat(Path.GetDirectoryName(path), "/placeholder.wav");
-                var waveFormat = new WaveFormat(waveFileReader.WaveFormat.SampleRate, 16, waveFileReader.WaveFormat.Channels);
+                var waveFormat = new WaveFormat(44100, 16, 1);
                 WaveFileWriter.CreateWaveFile(convertedSound, new WaveFormatConversionStream(waveFormat, waveFileReader));
                 waveFileReader.Close();
                 File.Copy(convertedSound, path, true);

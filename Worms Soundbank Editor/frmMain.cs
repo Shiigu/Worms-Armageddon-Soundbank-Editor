@@ -300,7 +300,7 @@ namespace Worms_Soundbank_Editor
             CurrentSoundbank = string.Empty;
             SoundbankPath = string.Empty;
             if (Directory.Exists(TempDirectory))
-                Directory.Delete(TempDirectory);
+                Directory.Delete(TempDirectory, true);
             btnDeleteSound.Enabled = false;
         }
 
