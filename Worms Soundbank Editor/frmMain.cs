@@ -264,7 +264,8 @@ namespace Worms_Soundbank_Editor
             foreach (object item in cmbSoundbankList.Items)
                 if(!item.ToString().Equals(NEW_SOUNDBANK))
                     itemList.Add(item.ToString());
-            itemList.Add(CurrentSoundbank);
+            if(!itemList.Contains(CurrentSoundbank))
+                itemList.Add(CurrentSoundbank);
             itemList.Sort();
             itemList.Insert(0, NEW_SOUNDBANK);
             cmbSoundbankList.Items.Clear();
