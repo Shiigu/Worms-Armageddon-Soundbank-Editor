@@ -168,8 +168,9 @@ namespace Worms_Soundbank_Editor
         private void FillSoundList()
         {
             lvSoundbankSounds.Items.Clear();
-            sounds.ForEach(sound =>
-            {
+            object listlock = new object();
+            var itemList = new List<ListViewItem>();
+            Parallel.ForEach(sounds, sound => {
                 if (Loading)
                 {
                     if (!CurrentSoundbank.Equals(NEW_SOUNDBANK))
@@ -189,6 +190,9 @@ namespace Worms_Soundbank_Editor
                         sound.SoundDuration = WavFileUtils.GetWavFileDuration(sound.SoundPath).TotalSeconds;
                     }
                 }
+            });
+            sounds.ForEach(sound =>
+            {
                 if (ShowUnusedSounds || sound.Used)
                 {
                     var listViewItem = new ListViewItem
@@ -204,9 +208,10 @@ namespace Worms_Soundbank_Editor
                         listViewItem.SubItems[2].Text = $"{sound.SoundDuration.ToString("0.##")} sec.";
                         listViewItem.ToolTipText = sound.SoundPath;
                     }
-                    lvSoundbankSounds.Items.Add(listViewItem);
+                    itemList.Add(listViewItem);
                 }
             });
+            lvSoundbankSounds.Items.AddRange(itemList.ToArray());
             Loading = false;
         }
 
@@ -371,8 +376,8 @@ namespace Worms_Soundbank_Editor
             {
                 if (!cmbSoundbankList.SelectedItem.ToString().Equals(NEW_SOUNDBANK))
                 {
+                    LoadSoundbank(cmbSoundbankList.SelectedItem.ToString());
                     CurrentSoundbank = cmbSoundbankList.SelectedItem.ToString();
-                    LoadSoundbank(CurrentSoundbank);
                     btnSave.Enabled = true;
                     btnDeleteBank.Enabled = true;
                 }
